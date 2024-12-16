@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .expense-item {
+            background-color: #15919b;
+            color: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .label-name {
+            color: #a36361;
+        }
+        #reportModal .modal-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <header class="d-flex justify-content-between align-items-center p-3 bg-light">
+        <h1>Quản lý chi tiêu</h1>
+        <div id="user-info" class="cursor-pointer" data-toggle="modal" data-target="#loginModal">
+            <i class="fa-regular fa-user"></i>
+            <span id="user-name"></span>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <button class="btn btn-primary mb-3" id="add-expense-btn">Add Expense</button>
+        <button class="btn btn-secondary mb-3" id="export-report-btn">Xem Báo Cáo Tháng</button>
+
+        <div id="expenses-list"></div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Đăng Nhập</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="Nhập email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Mật khẩu</label>
+                            <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+                    </form>
+                    <hr>
+                    <p class="text-center">Chưa có tài khoản? <a href="#" id="open-signup">Đăng Ký</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Add Expense Modal -->
+    <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addExpenseModalLabel">Add Expense</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="expense-form">
+                        <div class="form-group">
+                            <label for="existing-label">Choose Label</label>
+                            <select class="form-control" id="existing-label">
+                                <option value="">Select existing label</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-label">Or Create New Label</label>
+                            <input type="text" class="form-control" id="new-label" placeholder="Enter new label">
+                        </div>
+                        <div class="form-group">
+                            <label for="so_tien">Amount</label>
+                            <input type="number" class="form-control" id="so_tien" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="note">Note</label>
+                            <input type="text" class="form-control" id="note">
+                        </div>
+                        <div class="form-group">
+                            <label for="time_use">Date</label>
+                            <input type="date" class="form-control" id="time_use" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Expense</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Model -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">Xuất Báo Cáo Tháng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="report-form">
+                        <div class="form-group">
+                            <label for="report-month">Tháng</label>
+                            <input type="number" id="report-month" class="form-control" placeholder="Nhập tháng (1-12)" min="1" max="12" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="report-year">Năm</label>
+                            <input type="number" id="report-year" class="form-control" placeholder="Nhập năm" min="2000" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Xem Báo Cáo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sign up-->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signupModalLabel">Đăng Ký</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name">Tên Người Dùng</label>
+                            <input type="text" id="signup-name" class="form-control" placeholder="Nhập tên người dùng" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" id="signup-email" class="form-control" placeholder="Nhập email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Mật khẩu</label>
+                            <input type="password" id="signup-password" class="form-control" placeholder="Nhập mật khẩu" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Đăng Ký</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script src="../static/script.js"></script>
+</body>
+</html>
